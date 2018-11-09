@@ -21,7 +21,7 @@ public class Bank implements IBank {
     public Bank() {
         this.bankId = this.nextBankId;
         this.accounts = new ArrayList<IAccount>();
-        this.bankId++;
+        nextBankId++;
     }
     public long getBankId() {
         return this.bankId;
