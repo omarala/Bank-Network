@@ -4,6 +4,7 @@ import com.ensimag.api.bank.*;
 import com.ensimag.api.message.IAck;
 import com.ensimag.api.message.IResult;
 import com.ensimag.api.node.INode;
+import com.ensimag.message.Ack;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.xml.soap.Node;
@@ -19,6 +20,8 @@ public class BankNode implements IBankNode {
     private IBank bank;
     private LinkedList<INode<IBankMessage>> neighboors;
     private ArrayList<Long> waitNeighboors;
+    private boolean dejaVu = false;
+    private INode firstSender;
     public BankNode(long id, IBank bank) {
         this.id = id;
         this.bank = bank;
@@ -30,25 +33,40 @@ public class BankNode implements IBankNode {
     }
 
     public void onMessage(IBankMessage iBankMessage) throws RemoteException {
-        if(iBankMessage.getDestinationBankId() == id)
+        if(dejaVu == false)
         {
-            try{
-                iBankMessage.getAction().execute(this);
-            }
-            catch(Exception e){
-                System.out.println(e);
+            if(iBankMessage.getDestinationBankId() == id)
+            {
+                try{
+                    iBankMessage.getAction().execute(this);
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                }
+            }else{
+                for(INode element:neighboors) {
+                    if (element.getId() != iBankMessage.getSenderId()) {
+                        element.onMessage(iBankMessage);
+                        waitNeighboors.add(element.getId());
+                    }else{
+                        firstSender = element;
+                    }
+                }
+                dejaVu = true;
             }
         }else{
-                for(INode element:neighboors) {
-                    element.onMessage(iBankMessage);
-                    waitNeighboors.add(element.getId());
-                }
-            }
+            Ack ackMessage = new Ack(this.id, iBankMessage.getMessageId());
+            this.findNode(iBankMessage.getSenderId()).onAck(ackMessage);
+        }
     }
 
     public void onAck(IAck iAck) throws RemoteException {
         try{
             waitNeighboors.remove(iAck.getAckSenderId());
+            //transmet ack pour le firstSender
+            if(waitNeighboors.size() == 0 && firstSender != null){
+                firstSender.onAck(iAck);
+            }
         } catch(Exception e ){
             throw new RemoteException("Ack incorrect.");
         }
@@ -56,13 +74,29 @@ public class BankNode implements IBankNode {
 
     public void addNeighboor(INode<IBankMessage> var1) throws RemoteException
     {
-        this.neighboors.add(var1);
+        try{
+            this.neighboors.add(var1);
+        } catch (Exception e){
+            throw new RemoteException("Impossible to add the neighbour");
+        }
     }
 
     public void removeNeighboor(INode<IBankMessage> iNode) throws RemoteException {
-        neighboors.remove(iNode);
+        try{
+            neighboors.remove(iNode);
+        } catch(Exception e){
+            throw new RemoteException("Impossible to remove the neighbour");
+        }
     }
 
+    public INode findNode(long id) throws RemoteException{
+        for(INode element:neighboors){
+            if (element.getId() == id){
+                return element;
+            }
+        }
+        return null;
+    }
     public List<IResult<? extends Serializable>> getResultForMessage(long l) throws RemoteException {
         return null;
     }
