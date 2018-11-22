@@ -1,5 +1,7 @@
 package com.ensimag.bank;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import com.ensimag.api.bank.*;
 import com.ensimag.api.message.IAck;
 import com.ensimag.api.message.IResult;
@@ -8,18 +10,18 @@ import com.ensimag.api.node.INode;
 import javax.security.auth.login.AccountNotFoundException;
 import javax.xml.soap.Node;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class BankNode implements IBankNode {
+public class BankNode extends UnicastRemoteObject implements IBankNode {
     private long id;
     private IBank bank;
     private LinkedList<INode<IBankMessage>> neighboors;
     private ArrayList<Long> waitNeighboors;
-    public BankNode(long id, IBank bank) {
+
+    public BankNode(long id, IBank bank) throws RemoteException{
         this.id = id;
         this.bank = bank;
         this.neighboors = new LinkedList<INode<IBankMessage>>();

@@ -23,6 +23,7 @@ public class Bank implements IBank {
         this.accounts = new ArrayList<IAccount>();
         nextBankId++;
     }
+
     public long getBankId() {
         return this.bankId;
     }
