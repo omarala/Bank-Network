@@ -4,6 +4,7 @@ import com.ensimag.api.bank.IAccount;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import javax.security.auth.login.AccountNotFoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,4 +55,43 @@ public class BankClassTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void closeAccountTest() {
+        long accountId = 0;
+        boolean bool = true;
+        User user = new User("nono", "ko", "33");
+        try {
+            bank2.openAccount(user);
+            for (IAccount account: bank2.getAccounts()) {
+                if (account.getAccountUser().equals(user)) {
+                    accountId = account.getAccountNumber();
+                }
+            }
+            bank2.closeAccount(accountId);
+            for (IAccount account: bank2.getAccounts()) {
+                if (account.getAccountNumber() == accountId) {
+                    bool = false;
+                }
+            }
+            assertEquals(true, bool);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (AccountNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+// TODO tester lever exception quand exception sera implementee
+//    @Test
+//    public void closeAccountThrowException() {
+//        try {
+//            bank1.closeAccount(-3);
+//            fail("Exception not thrown for closeAccount");
+//        } catch (AccountNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
