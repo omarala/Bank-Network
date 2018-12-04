@@ -20,9 +20,14 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
     private IBank bank;
     private LinkedList<INode<IBankMessage>> neighboors;
     private ArrayList<Long> waitNeighboors;
-    private Map<INode firstSender;
+    private HashMap<INode, Long> firstSender;
     private ArrayList<Long> ReceivedMessageId;
-    public BankNode(IBank bank) throws RemoteException{
+
+    public BankNode() throws RemoteException{
+        this.bank = new Bank();
+        this.neighboors = new LinkedList<INode<IBankMessage>>();
+    }
+    public BankNode(long id, IBank bank) throws RemoteException{
         this.bank = bank;
         this.neighboors = new LinkedList<INode<IBankMessage>>();
     }

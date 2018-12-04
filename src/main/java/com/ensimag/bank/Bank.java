@@ -24,6 +24,11 @@ public class Bank implements IBank {
         nextBankId++;
     }
 
+    public Bank(long bankId) {
+        this.bankId = bankId;
+        this.accounts = new ArrayList<IAccount>();
+    }
+
     public long getBankId() {
         return this.bankId;
     }
