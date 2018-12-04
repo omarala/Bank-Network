@@ -17,31 +17,31 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class BankNode extends UnicastRemoteObject implements IBankNode {
-    private long id;
     private IBank bank;
     private LinkedList<INode<IBankMessage>> neighboors;
     private ArrayList<Long> waitNeighboors;
-<<<<<<< HEAD
-    private boolean dejaVu = false;
-    private INode firstSender;
-    public BankNode(long id, IBank bank) {
-=======
-
-    public BankNode(long id, IBank bank) throws RemoteException{
->>>>>>> 5b4c7b64cb33e3fe566c2be271787f3bb632012d
-        this.id = id;
+    private Map<INode firstSender;
+    private ArrayList<Long> ReceivedMessageId;
+    public BankNode(IBank bank) throws RemoteException{
         this.bank = bank;
         this.neighboors = new LinkedList<INode<IBankMessage>>();
     }
 
     public long getId() {
-        return id;
+        return bank.getBankId();
     }
 
     public void onMessage(IBankMessage iBankMessage) throws RemoteException {
-        if(dejaVu == false)
-        {
-            if(iBankMessage.getDestinationBankId() == id)
+        if(ReceivedMessageId.contains(iBankMessage.getMessageId())) {
+            for (INode<IBankMessage> neighbour : neighboors) {
+                if (neighbour.getId() == iBankMessage.getSenderId()) {
+                    neighbour.onAck(new Ack(this.bank.getBankId(), iBankMessage.getMessageId()));
+                    return;
+                }
+            }
+        }else{
+
+            if(iBankMessage.getDestinationBankId() == bank.getBankId())
             {
                 try{
                     iBankMessage.getAction().execute(this);
@@ -60,10 +60,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
                 }
                 dejaVu = true;
             }
-        }else{
-            Ack ackMessage = new Ack(this.id, iBankMessage.getMessageId());
-            this.findNode(iBankMessage.getSenderId()).onAck(ackMessage);
-        }
+    }
     }
 
     public void onAck(IAck iAck) throws RemoteException {
