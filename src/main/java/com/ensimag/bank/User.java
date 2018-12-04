@@ -9,7 +9,6 @@ public class User implements IUser{
 
     private String name;
     private String firstName;
-    // TODO Changer age en date de naissance et changer le getter
     private String age;
 
     public User(String name, String firstName, String age) {
@@ -28,5 +27,16 @@ public class User implements IUser{
 
     public String getAge() {
         return age;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof User))
+            return false;
+        User comparedUser = (User) o;
+        return this.name.equals(comparedUser.getName()) &&  this.firstName.equals(comparedUser.getFirstName())
+                && this.age.equals(comparedUser.getAge());
     }
 }

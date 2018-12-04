@@ -26,7 +26,7 @@ public class CreateBankNode {
             r.bind("BankNode" + newBankNodeId, bankNode);
             System.out.println("----- BankNode" + newBankNodeId + " is available on RMI registry-----");
 
-            // Connect the node to the network, if it is not the first node
+//             Connect the node to the network, if it's not the first node
             if (newBankNodeId > 1) {
                 long prevBankNodeId = newBankNodeId - 1;
                 IBankNode prevBankNode = (IBankNode) r.lookup("BankNode" + prevBankNodeId);

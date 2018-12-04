@@ -21,11 +21,6 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
     private IBank bank;
     private LinkedList<INode<IBankMessage>> neighboors;
     private ArrayList<Long> waitNeighboors;
-<<<<<<< HEAD
-    private boolean dejaVu = false;
-    private INode firstSender;
-    public BankNode(long id, IBank bank) {
-=======
 
     public BankNode() throws RemoteException{
         this.id = 11111;
@@ -33,7 +28,6 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
         this.neighboors = new LinkedList<INode<IBankMessage>>();
     }
     public BankNode(long id, IBank bank) throws RemoteException{
->>>>>>> 5b4c7b64cb33e3fe566c2be271787f3bb632012d
         this.id = id;
         this.bank = bank;
         this.neighboors = new LinkedList<INode<IBankMessage>>();
