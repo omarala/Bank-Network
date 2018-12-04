@@ -8,7 +8,6 @@ import java.rmi.server.UnicastRemoteObject;
  */
 public class IDManager extends UnicastRemoteObject implements IIDManager {
     public static long bankId = 1;
-    public static long bankNodeId = 1;
     public static long messageId = 1;
 
     public IDManager() throws RemoteException {
@@ -19,12 +18,6 @@ public class IDManager extends UnicastRemoteObject implements IIDManager {
         long nextBankId = bankId;
         bankId++;
         return nextBankId;
-    }
-
-    public long nextBankNodeId() throws RemoteException {
-        long nextBankNodeId = bankNodeId;
-        bankNodeId++;
-        return nextBankNodeId;
     }
 
     public long nextMessageId() throws RemoteException {

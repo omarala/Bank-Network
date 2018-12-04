@@ -10,6 +10,5 @@ import java.rmi.RemoteException;
  */
 public interface IIDManager extends Remote, Serializable{
     long nextBankId() throws RemoteException;
-    long nextBankNodeId() throws RemoteException;
     long nextMessageId() throws RemoteException;
 }

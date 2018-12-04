@@ -13,6 +13,7 @@ import javax.xml.soap.Node;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
         this.bank = new Bank();
         this.neighboors = new LinkedList<INode<IBankMessage>>();
     }
-    public BankNode(long id, IBank bank) throws RemoteException{
+    public BankNode(IBank bank) throws RemoteException{
 
         this.bank = bank;
         this.neighboors = new LinkedList<INode<IBankMessage>>();
