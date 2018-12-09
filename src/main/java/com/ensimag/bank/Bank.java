@@ -14,14 +14,12 @@ import java.util.List;
  */
 public class Bank implements IBank {
     // Variable statique incrementee a chaque nouvelle banque
-    private static long nextBankId = 1;
     private long bankId;
     private List<IAccount> accounts;
 
     public Bank() {
-        this.bankId = this.nextBankId;
+        this.bankId = IDManager.nextBankId();
         this.accounts = new ArrayList<IAccount>();
-        nextBankId++;
     }
 
     public Bank(long bankId) {
@@ -38,7 +36,7 @@ public class Bank implements IBank {
     }
 
     public IAccount getAccount(long l) throws AccountNotFoundException, RemoteException {
-        for (IAccount account: this.accounts) {
+        for (IAccount account : this.accounts) {
             if (account.getAccountNumber() == l) {
                 return account;
             }
@@ -54,7 +52,7 @@ public class Bank implements IBank {
     }
 
     public boolean closeAccount(long l) throws AccountNotFoundException, RemoteException {
-        for (IAccount account: this.accounts) {
+        for (IAccount account : this.accounts) {
             if (account.getAccountNumber() == l) {
                 this.accounts.remove(account);
                 return true;
