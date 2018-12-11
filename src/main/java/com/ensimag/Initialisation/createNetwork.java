@@ -17,48 +17,48 @@ import java.util.Scanner;
  * Created by cadicn on 12/11/18.
  */
 public class createNetwork {
-    public static long openAccountAction(Scanner scanner, int nb) {
-        System.out.println("Enter the bank in which you would like to open the account (between 1 and " + nb + " : ");
+    public static long openAccountAction(Scanner scanner, long nb) {
+        System.out.println("Enter the bank in which you would like to open the account (between 1 and " + nb + ") : ");
         return scanner.nextLong();
     }
 
-    public static long[] closeAccountAction(Scanner scanner, int nb) {
+    public static long[] closeAccountAction(Scanner scanner, long nb) {
         long[] params = new long[2];
-        System.out.println("Enter the bank in which you would like to close the account (between 1 and " + nb + " : ");
-        params[1] = scanner.nextLong();
+        System.out.println("Enter the bank in which you would like to close the account (between 1 and " + nb + ") : ");
+        params[0] = scanner.nextLong();
         System.out.println("Enter the id of the account you would like to close : ");
-        params[2] = scanner.nextInt();
+        params[1] = scanner.nextInt();
         return params;
     }
 
-    public static long[] addAmountAction(Scanner scanner, int nb) {
+    public static long[] addAmountAction(Scanner scanner, long nb) {
         long[] params = new long[3];
-        System.out.println("Enter the bank concerned (between 1 and " + nb + " : ");
-        params[1] = scanner.nextLong();
+        System.out.println("Enter the bank concerned (between 1 and " + nb + ") : ");
+        params[0] = scanner.nextLong();
         System.out.println("Enter the id of the concerned account : ");
-        params[2] = scanner.nextLong();
+        params[1] = scanner.nextLong();
         System.out.println("Enter the amount you would like to add : ");
-        params[3] = scanner.nextLong();
+        params[2] = scanner.nextLong();
         return params;
     }
 
-    public static long[] withDrawAmountAction(Scanner scanner, int nb) {
+    public static long[] withDrawAmountAction(Scanner scanner, long nb) {
         long[] params = new long[3];
-        System.out.println("Enter the bank concerned (between 1 and " + nb + " : ");
-        params[1] = scanner.nextLong();
+        System.out.println("Enter the bank concerned (between 1 and " + nb + ") : ");
+        params[0] = scanner.nextLong();
         System.out.println("Enter the id of the concerned account : ");
-        params[2] = scanner.nextLong();
+        params[1] = scanner.nextLong();
         System.out.println("Enter the amount you would like to withdraw : ");
-        params[3] = scanner.nextLong();
+        params[2] = scanner.nextLong();
         return params;
     }
 
-    public static long[] consultAccountAction(Scanner scanner, int nb) {
+    public static long[] consultAccountAction(Scanner scanner, long nb) {
         long[] params = new long[2];
-        System.out.println("Enter the bank concerned (between 1 and " + nb + " : ");
-        params[1] = scanner.nextLong();
+        System.out.println("Enter the bank concerned (between 1 and " + nb + ") : ");
+        params[0] = scanner.nextLong();
         System.out.println("Enter the id of the concerned account : ");
-        params[2] = scanner.nextLong();
+        params[1] = scanner.nextLong();
         return params;
     }
 
@@ -73,12 +73,14 @@ public class createNetwork {
         System.out.println("6 - Exit");
     }
 
-    private static void handleOpenAccount(Scanner scanner, int nb, User user) {
+    private static void handleOpenAccount(Scanner scanner, long nb, User user, IBankNode connectedBN) {
         long param = openAccountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/IBankNode" + nb);
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), param, new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
+            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), param,
+                    new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
+            connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -88,12 +90,14 @@ public class createNetwork {
         }
     }
 
-    private static void handleCloseAccount(Scanner scanner, int nb, User user) {
+    private static void handleCloseAccount(Scanner scanner, long nb, User user, IBankNode connectedBN) {
         long[] params = closeAccountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/IBankNode" + nb);
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[1], new CloseAccount(user, params[2]), EnumMessageType.SINGLE_DEST);
+            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+                    new CloseAccountAction(params[1], user), EnumMessageType.SINGLE_DEST);
+            connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -102,12 +106,15 @@ public class createNetwork {
             e.printStackTrace();
         }
     }
-    private static void handleAddAmount(Scanner scanner, int nb, User user) {
-        long[] params = closeAccountAction(scanner, nb);
+
+    private static void handleAddAmount(Scanner scanner, long nb, IBankNode connectedBN) {
+        long[] params = addAmountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/IBankNode" + nb);
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[1], new CloseAccount(user, params[2]), EnumMessageType.SINGLE_DEST);
+            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+                    new AddAmoutAction(params[1], (int)params[2]), EnumMessageType.SINGLE_DEST);
+            connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
             e.printStackTrace();
         } catch (MalformedURLException e) {
@@ -116,9 +123,38 @@ public class createNetwork {
             e.printStackTrace();
         }
     }
-    private static void handleWithdrawAmount(Scanner scanner, int nb) {
+
+    private static void handleWithdrawAmount(Scanner scanner, long nb, IBankNode connectedBN) {
+        long[] params = withDrawAmountAction(scanner, nb);
+        try {
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
+            IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
+            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+                    new WithdrawAccountAction(params[1], (int)params[2]), EnumMessageType.SINGLE_DEST);
+            connectedBN.onMessage(msg);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
-    private static void handleConsult(Scanner scanner, int nb) {
+    private static void handleConsult(Scanner scanner, long nb, IBankNode connectedBN) {
+        long[] params = consultAccountAction(scanner, nb);
+        try {
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
+            IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
+            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+                    new ConsultAccountAction(params[1]), EnumMessageType.SINGLE_DEST);
+            connectedBN.onMessage(msg);
+        } catch (NotBoundException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -145,24 +181,24 @@ public class createNetwork {
                 actionNb = scanner.nextInt();
                 switch (actionNb) {
                     case 1:
-                        handleConsult(scanner, nb, user);
+                        handleConsult(scanner, numberOfBanks, bankNode);
                         break;
                     case 2:
-                        handleOpenAccount(scanner, nb, user);
+                        handleOpenAccount(scanner, numberOfBanks, user, bankNode);
                         break;
                     case 3:
-                        handleCloseAccount(scanner, nb, user);
+                        handleCloseAccount(scanner, numberOfBanks, user, bankNode);
                         break;
                     case 4:
-                        handleAddAmount(scanner, nb, user);
+                        handleAddAmount(scanner, numberOfBanks, bankNode);
                         break;
                     case 5:
-                        handleWithdrawAmount(scanner, nb, user);
+                        handleWithdrawAmount(scanner, numberOfBanks, bankNode);
                         break;
                     case 6:
                         break;
                     default:
-                        break
+                        break;
                 }
             }
 

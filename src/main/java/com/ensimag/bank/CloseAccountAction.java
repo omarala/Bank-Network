@@ -1,35 +1,30 @@
 package com.ensimag.bank;
 
-import com.ensimag.api.bank.IAccount;
 import com.ensimag.api.bank.IBankAction;
 import com.ensimag.api.bank.IBankNode;
-import com.ensimag.api.bank.IUser;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 
 public class CloseAccountAction implements IBankAction {
-    IUser user;
+    private long numberAccount;
+    private User user;
 
-    public CloseAccountAction(IUser user) {
+    public CloseAccountAction(long numberAccount, User user) {
+        this.numberAccount = numberAccount;
         this.user = user;
     }
 
-    public Serializable execute(IBankNode node) {
+    public Serializable execute(IBankNode node) throws Exception {
         //return null;//node.closeAccount(user);
         try {
-            for(IAccount account : node.getAccounts()){
-                if(account.getAccountUser().equals(user)){
-                    return node.closeAccount(account.getAccountNumber());
-                }
+            if(node.closeAccount(numberAccount)){
+                return "Account : " + numberAccount + " closed for client : "
+                        + user.getName() + " " +user.getName();
             }
-
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (AccountNotFoundException e) {
-            e.printStackTrace();
+            return "Unable to closed account : " + numberAccount + " for Client : "
+                    + user.getName() + " " +user.getName();
+        } catch (Exception e) {
+            throw e;
         }
-        return null;
     }
 }
