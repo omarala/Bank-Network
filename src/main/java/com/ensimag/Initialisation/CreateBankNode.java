@@ -28,8 +28,7 @@ public class CreateBankNode {
             r.bind("BankNode" + newBankId, bankNode);
             System.out.println("----- BankNode" + newBankId + " is available on RMI registry-----");
 
-
-            if(newBankId > 1) {
+            if (newBankId > 1) {
                 Random random = new Random();
                 int nbNeighboors = random.nextInt((int) newBankId - 1) + 1;
                 ArrayList<Integer> list = new ArrayList<Integer>();
@@ -48,9 +47,10 @@ public class CreateBankNode {
 
                 }
             }
-            if(newBankId == 5){
+            if (newBankId == 5) {
                 User user = new User("Cadic", "Nolwenn", "21");
-                BankMessage bankMessage = new BankMessage(newBankId, idManager.nextMessageId(), newBankId, 1, new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
+                BankMessage bankMessage = new BankMessage(newBankId, idManager.nextMessageId(), newBankId, 1,
+                        new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
                 bankNode.onMessage(bankMessage);
             }
         } catch (Exception e) {
