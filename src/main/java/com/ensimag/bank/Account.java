@@ -61,21 +61,28 @@ public class Account implements IAccount {
         return this.allowedOverdraw;
     }
 
-//    /**
-//     * New equal to compare account
-//     */
-//    @Override
-//    public boolean equals(Object o) {
-//        if (o == this) return true;
-//        if (!(o instanceof Account)) {
-//            return false;
-//        }
-//        Account account = (Account) o;
-//        return account.accountNumber == this.accountNumber;
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Long.valueOf(this.accountNumber).hashCode();
-//    }
+    @Override
+    public String toString() {
+        return "\n -------- Account ------\n User : " + this.user.toString() + "\n account number : "
+                + this.accountNumber + "\n total : " + this.total + "\n allowed Overdrawn: " + this.allowedOverdraw
+                + "\n ---------------------------";
+    }
+
+    /**
+     * New equal to compare account
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Account)) {
+            return false;
+        }
+        Account account = (Account) o;
+        return account.accountNumber == this.accountNumber;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.valueOf(this.accountNumber).hashCode();
+    }
 }

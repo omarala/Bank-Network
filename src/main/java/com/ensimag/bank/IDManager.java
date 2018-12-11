@@ -17,7 +17,7 @@ public class IDManager extends UnicastRemoteObject implements IIDManager{
         super();
     }
 
-    public long nextBankId() throws RemoteException{
+    public long nextBankId() throws RemoteException {
         //long nextBankId = bankId;
         //bankId++;
         System.out.println("bankId : "+bankId);
@@ -30,9 +30,13 @@ public class IDManager extends UnicastRemoteObject implements IIDManager{
         return nextAccountId;
     }
 
-    public long nextMessageId() throws RemoteException{
+    public long nextMessageId() throws RemoteException {
         long nextMessageId = messageId;
         messageId++;
         return nextMessageId;
+    }
+
+    public long getNextBankId() throws RemoteException {
+        return bankId;
     }
 }

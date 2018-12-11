@@ -19,12 +19,10 @@ public class CreateBankNode {
         try {
             Registry r = LocateRegistry.getRegistry("localhost", 1099);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            System.out.println(idManager);
             long newBankId = idManager.nextBankId();
             IBankNode bankNode = new BankNode(new Bank(newBankId), idManager);
             r.bind("BankNode" + newBankId, bankNode);
             System.out.println("----- BankNode" + newBankId + " is available on RMI registry-----");
-
             // Connect the node to the network, if it's not the first node
             if (newBankId > 1) {
                 long prevBankNodeId = newBankId - 1;

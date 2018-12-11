@@ -67,4 +67,9 @@ public class Bank implements IBank {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "Bank ID : " + this.bankId;
+    }
 }

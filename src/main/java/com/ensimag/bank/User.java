@@ -30,6 +30,11 @@ public class User implements IUser{
     }
 
     @Override
+    public String toString() {
+        return "(nom : " + this.name + " ,prénom : " + this.firstName + ", age : " + this.age + ")";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this)
             return true;

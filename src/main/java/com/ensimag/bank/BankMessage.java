@@ -53,4 +53,9 @@ public class BankMessage implements IBankMessage {
     public EnumMessageType getMessageType() {
         return messageType;
     }
+
+    @Override
+    public String toString() {
+        return "Message number : " + this.messageId + ", sender : " + this.senderId + ", destination : " + this.destinationBankId;
+    }
 }

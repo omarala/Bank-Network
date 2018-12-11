@@ -12,4 +12,6 @@ public interface IIDManager extends Remote, Serializable {
     long nextAccountId() throws RemoteException;
 
     long nextMessageId() throws RemoteException;
+
+    long getNextBankId() throws RemoteException;
 }
