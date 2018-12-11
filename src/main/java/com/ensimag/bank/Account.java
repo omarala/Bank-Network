@@ -3,6 +3,7 @@ package com.ensimag.bank;
 import com.ensimag.api.bank.IAccount;
 import com.ensimag.api.bank.IUser;
 import com.ensimag.api.bank.NotEnoughMoneyException;
+import java.util.Random;
 
 /**
  * Created by cadicn on 11/8/18.

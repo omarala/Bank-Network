@@ -28,7 +28,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
     private HashMap<Long, LinkedList<INode<IBankMessage>>> messageIdToWaitingNeighboor;
     private HashMap<Long, Long> firstSenderToMessageId;
     private HashMap<Long, IBankMessage> receivedMessages;
-    private HashMap<Long,List<IResult>> answersByMessageId;
+    private HashMap<Long,List<IResult <? extends Serializable>>> answersByMessageId;
     private LinkedList<Long> transmissionComplete;
 
     //same idManager shared between all bankNodes with rmi
@@ -42,7 +42,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
         this.messageIdToWaitingNeighboor = new HashMap<Long, LinkedList<INode<IBankMessage>>>();
         this.firstSenderToMessageId = new HashMap<Long, Long>();
         this.receivedMessages = new HashMap<Long, IBankMessage>();
-        this.answersByMessageId = new HashMap<Long,List<IResult>>();
+        this.answersByMessageId = new HashMap<Long,List<IResult<? extends Serializable>>>();
         this.transmissionComplete = new LinkedList<Long>();
         this.idManager = idManager;
 
@@ -167,7 +167,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
 
 
                         if(!answersByMessageId.containsKey(result.getMessageId())){
-                            answersByMessageId.put(result.getMessageId(), new LinkedList<IResult>());
+                            answersByMessageId.put(result.getMessageId(), new LinkedList<IResult<? extends Serializable>>());
                         }
 
 
@@ -270,6 +270,13 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
     }
 
     public List<IResult<? extends Serializable>> getResultForMessage(long l) throws RemoteException {
+        if(transmissionComplete.contains(l)){
+            if(answersByMessageId.containsKey(l)){
+                return answersByMessageId.get(l);
+            }else{
+                return new LinkedList<IResult<? extends Serializable>>();
+            }
+        }
         return null;
     }
 
