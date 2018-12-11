@@ -5,6 +5,7 @@ import com.ensimag.api.bank.IBank;
 import com.ensimag.api.bank.IUser;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +16,22 @@ import java.util.List;
 public class Bank implements IBank {
     // Variable statique incrementee a chaque nouvelle banque
     private long bankId;
-    private List<IAccount> accounts;
+    private List<IAccount> accounts = new ArrayList<IAccount>();
 
     public Bank() {
-        this.bankId = IDManager.nextBankId();
-        this.accounts = new ArrayList<IAccount>();
+        try{
+            IDManager idManager = (IDManager) Naming.lookup("rmi://localhost:" + 1099 + "/service");
+            this.bankId = idManager.nextBankId();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     public Bank(long bankId) {
         this.bankId = bankId;
-        this.accounts = new ArrayList<IAccount>();
     }
 
     public long getBankId() {

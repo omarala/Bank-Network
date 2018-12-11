@@ -3,7 +3,6 @@ package com.ensimag.bank;
 import com.ensimag.api.bank.IBankAction;
 import com.ensimag.api.bank.IBankMessage;
 import com.ensimag.api.message.EnumMessageType;
-import com.ensimag.api.message.IAction;
 
 public class BankMessage implements IBankMessage {
     private long senderId;
