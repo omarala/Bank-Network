@@ -17,7 +17,13 @@ public class OpenAccountAction implements IBankAction {
     }
 
     public Serializable execute(IBankNode node) throws Exception {
-        IAccount account =  node.openAccount(user);
-        return account;
+        try{
+            IAccount account =  node.openAccount(user);
+            return account;
+        }
+        catch(Exception e){
+            throw e;
+        }
+
     }
 }

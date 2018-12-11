@@ -33,7 +33,7 @@ public class CreateBankNode {
                 prevBankNode.addNeighboor(bankNode);
                 System.out.println("----- BankNode" + newBankId + " has BankNode" + prevBankNodeId + " as neighboor-----");
             }
-            if(newBankId == 4){
+            if(newBankId == 2){
                 User user = new User("Cadic", "Nolwenn", "21");
                 BankMessage bankMessage = new BankMessage(newBankId, idManager.nextMessageId(), newBankId, 1, new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
                 //IBankNode prevBankNode = (IBankNode) r.lookup("BankNode" + 1);
