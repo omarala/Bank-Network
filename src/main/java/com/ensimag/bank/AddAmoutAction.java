@@ -18,7 +18,7 @@ public class AddAmoutAction implements IBankAction {
     public Serializable execute(IBankNode iBankNode) throws Exception {
         try{
             IAccount account = iBankNode.getAccount(accountNumber);
-            account.remove(amount);
+            account.add(amount);
             return account;
         }catch(Exception e){
             throw e;

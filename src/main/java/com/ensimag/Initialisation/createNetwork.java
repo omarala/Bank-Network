@@ -76,9 +76,9 @@ public class createNetwork {
     private static void handleOpenAccount(Scanner scanner, long nb, User user, IBankNode connectedBN) {
         long param = openAccountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
+            System.out.println("I am in bankNode"+ connectedBN.getId() + " , opening account in bankNode"+param);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), param,
+            BankMessage msg = new BankMessage(connectedBN.getId(), idManager.nextMessageId(), connectedBN.getId(), param,
                     new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
             connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
@@ -93,9 +93,8 @@ public class createNetwork {
     private static void handleCloseAccount(Scanner scanner, long nb, User user, IBankNode connectedBN) {
         long[] params = closeAccountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+            BankMessage msg = new BankMessage(connectedBN.getId(), idManager.nextMessageId(), connectedBN.getId(), params[0],
                     new CloseAccountAction(params[1], user), EnumMessageType.SINGLE_DEST);
             connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
@@ -110,9 +109,8 @@ public class createNetwork {
     private static void handleAddAmount(Scanner scanner, long nb, IBankNode connectedBN) {
         long[] params = addAmountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+            BankMessage msg = new BankMessage(connectedBN.getId(), idManager.nextMessageId(), connectedBN.getId(), params[0],
                     new AddAmoutAction(params[1], (int)params[2]), EnumMessageType.SINGLE_DEST);
             connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
@@ -127,9 +125,9 @@ public class createNetwork {
     private static void handleWithdrawAmount(Scanner scanner, long nb, IBankNode connectedBN) {
         long[] params = withDrawAmountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
+            //the destination
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+            BankMessage msg = new BankMessage(connectedBN.getId(), idManager.nextMessageId(), connectedBN.getId(), params[0],
                     new WithdrawAccountAction(params[1], (int)params[2]), EnumMessageType.SINGLE_DEST);
             connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
@@ -143,9 +141,9 @@ public class createNetwork {
     private static void handleConsult(Scanner scanner, long nb, IBankNode connectedBN) {
         long[] params = consultAccountAction(scanner, nb);
         try {
-            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + nb);
+            IBankNode bn = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + params[0]);
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
-            BankMessage msg = new BankMessage(bn.getId(), idManager.nextMessageId(), bn.getId(), params[0],
+            BankMessage msg = new BankMessage(connectedBN.getId(), idManager.nextMessageId(), connectedBN.getId(), params[0],
                     new ConsultAccountAction(params[1]), EnumMessageType.SINGLE_DEST);
             connectedBN.onMessage(msg);
         } catch (NotBoundException e) {
