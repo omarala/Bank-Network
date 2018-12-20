@@ -43,16 +43,10 @@ public class CreateBankNode {
                     IBankNode voisin = (IBankNode) r.lookup("BankNode" + idVoisin);
                     bankNode.addNeighboor(voisin);
                     voisin.addNeighboor(bankNode);
-                    System.out.println("youhouuu j'ai rajoute des voisins");
 
                 }
             }
-//            if (newBankId == 5) {
-//                User user = new User("Cadic", "Nolwenn", "21");
-//                BankMessage bankMessage = new BankMessage(newBankId, idManager.nextMessageId(), newBankId, 1,
-//                        new OpenAccountAction(user), EnumMessageType.SINGLE_DEST);
-//                bankNode.onMessage(bankMessage);
-//            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

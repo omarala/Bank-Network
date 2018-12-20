@@ -90,7 +90,6 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
                     }
                     // transmit the message to our neighboors
                 } else {
-                    System.out.println("no reason to be here for bankid 1. I am bank n° "+bank.getBankId());
                     // creating waiting neighboor list
                     LinkedList<INode<IBankMessage>> neighboorList = deepCopyNeighboors();
                     // removing the sender
@@ -236,16 +235,21 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
 
     public void sendAck(IBankMessage bankMessage) throws RemoteException {
         INode<IBankMessage> senderNode = findNode(bankMessage.getSenderId());
-        System.out.println("in senderNode the found node is : "+ senderNode.getId());
         IAck newAck = new Ack(bank.getBankId(), bankMessage.getMessageId());
         senderNode.onAck(newAck);
     }
 
     public void addNeighboor(INode<IBankMessage> var1) throws RemoteException {
         try {
-            this.neighboors.add(var1);
+            if(var1 != null){
+                this.neighboors.add(var1);
+            }else{
+                System.out.println(this);
+
+            }
+
         } catch (Exception e) {
-            throw new RemoteException("Impossible to add the neighbour");
+            e.printStackTrace();
         }
     }
 
@@ -307,5 +311,23 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
 
         }
         return newList;
+    }
+
+    public LinkedList<INode<IBankMessage>> getNeighboors() {
+        return neighboors;
+    }
+
+    @Override
+    public String toString(){
+        String res = ""+getId() + " -> ";
+        for(INode bankNode:neighboors){
+            try{
+                res+= bankNode.getId() +", ";
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return res;
     }
 }

@@ -161,6 +161,10 @@ public class createNetwork {
         try {
             IIDManager idManager = (IIDManager) Naming.lookup("rmi://localhost:" + 1099 + "/IDManager");
             long numberOfBanks = idManager.getNextBankId() - 1;
+            for (int i = 1 ; i<numberOfBanks + 1; i++){
+                IBankNode bNode = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + i);
+                bNode.addNeighboor(null);
+            }
             System.out.println("Let's identify you \n ");
             System.out.println("Enter you name : ");
             String name = scanner.nextLine();
