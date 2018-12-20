@@ -5,7 +5,7 @@ import com.ensimag.api.bank.IBankNode;
 import java.rmi.Naming;
 
 public class LinkRandom {
-    public static void main(){
+    public static void main(String[] args){
         try{
             IBankNode bNode1 = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + 1);
             IBankNode bNode2 = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + 2);
