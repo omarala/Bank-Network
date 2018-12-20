@@ -12,7 +12,11 @@ public class LinkLineaire {
             IBankNode bNode3 = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + 3);
 
             bNode2.addNeighboor(bNode1);
+            bNode1.addNeighboor(bNode2);
+
             bNode3.addNeighboor(bNode2);
+            bNode2.addNeighboor(bNode3);
+
 
             System.out.println("network : 1 <-> 2 <-> 3 ");
 
