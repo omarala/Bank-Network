@@ -96,16 +96,19 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
                     neighboorList.remove(senderNode);
 
                     boolean neighboorsAvailable = neighboorList.size()>0?true:false;
-                    messageIdToWaitingNeighboor.put(bankMessage.getMessageId(), neighboorList);
 
-                    for (INode<IBankMessage> neighboor : neighboorList) {
-                        IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
-                                bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
-                                bankMessage.getAction(), EnumMessageType.SINGLE_DEST);
-                        neighboor.onMessage(newMessage);
+                    if(neighboorsAvailable){
+                        for (INode<IBankMessage> neighboor : neighboorList) {
+                            IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
+                                    bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
+                                    bankMessage.getAction(), EnumMessageType.SINGLE_DEST);
+                            neighboor.onMessage(newMessage);
+                        }
+
                     }
 
-                    if (!neighboorsAvailable) {
+                    else{
+                        System.out.println("je devrais etre la");
                         sendAck(bankMessage);
                     }
                 }
@@ -133,14 +136,16 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
 
                     boolean neighboorsAvailable = neighboorList.size()>0?true:false;
 
-                    for (INode<IBankMessage> neighboor : neighboorList) {
-                        IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
-                                bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
-                                bankMessage.getAction(), EnumMessageType.BROADCAST);
-                        neighboor.onMessage(newMessage);
-                    }
+                    if(neighboorsAvailable){
+                        for (INode<IBankMessage> neighboor : neighboorList) {
+                            IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
+                                    bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
+                                    bankMessage.getAction(), EnumMessageType.BROADCAST);
+                            neighboor.onMessage(newMessage);
+                        }
 
-                    if (!neighboorsAvailable) {
+                    }
+                    else{
                         sendAck(bankMessage);
                     }
 
@@ -178,14 +183,15 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
                         messageIdToWaitingNeighboor.put(bankMessage.getMessageId(), neighboorList);
                         boolean neighboorsAvailable = neighboorList.size()>0?true:false;
 
-                        for (INode<IBankMessage> neighboor : neighboorList) {
-                            IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
-                                    bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
-                                    bankMessage.getAction(), EnumMessageType.DELIVERY);
-                            neighboor.onMessage(newMessage);
+                        if(neighboorsAvailable){
+                            for (INode<IBankMessage> neighboor : neighboorList) {
+                                IBankMessage newMessage = new BankMessage(bank.getBankId(), bankMessage.getMessageId(),
+                                        bankMessage.getOriginalBankSenderId(), bankMessage.getDestinationBankId(),
+                                        bankMessage.getAction(), EnumMessageType.DELIVERY);
+                                neighboor.onMessage(newMessage);
+                            }
                         }
-
-                        if (!neighboorsAvailable) {
+                        else {
                             sendAck(bankMessage);
                         }
                     }
@@ -236,6 +242,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
     public void sendAck(IBankMessage bankMessage) throws RemoteException {
         INode<IBankMessage> senderNode = findNode(bankMessage.getSenderId());
         IAck newAck = new Ack(bank.getBankId(), bankMessage.getMessageId());
+        System.out.println("Sending back ack to : BankNode" + senderNode.getId());
         senderNode.onAck(newAck);
     }
 
