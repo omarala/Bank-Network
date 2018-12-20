@@ -205,7 +205,7 @@ public class BankNode extends UnicastRemoteObject implements IBankNode {
             System.out.println("Unexpected ack received");
         } else {
             INode<IBankMessage> senderAckNode = findNode(iAck.getAckSenderId());
-            if(messageIdToWaitingNeighboor.get(iAck.getAckMessageId()).contains(senderAckNode)){
+            if(!messageIdToWaitingNeighboor.get(iAck.getAckMessageId()).contains(senderAckNode)){
                 System.out.println("Unexpected ack received from Bank n° " + iAck.getAckSenderId());
             }
             else{
