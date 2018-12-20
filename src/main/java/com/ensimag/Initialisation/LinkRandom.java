@@ -5,7 +5,7 @@ import com.ensimag.api.bank.IBankNode;
 import java.rmi.Naming;
 
 public class LinkRandom {
-    public static void main(){
+    public static void main(String[] args){
         try{
             IBankNode bNode1 = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + 1);
             IBankNode bNode2 = (IBankNode) Naming.lookup("rmi://localhost:" + 1099 + "/BankNode" + 2);
@@ -17,11 +17,22 @@ public class LinkRandom {
 
 
             bNode2.addNeighboor(bNode1);
+            bNode1.addNeighboor(bNode2);
+
             bNode3.addNeighboor(bNode1);
+            bNode1.addNeighboor(bNode3);
+
             bNode4.addNeighboor(bNode1);
+            bNode1.addNeighboor(bNode4);
+
             bNode5.addNeighboor(bNode4);
+            bNode4.addNeighboor(bNode5);
+
             bNode6.addNeighboor(bNode5);
+            bNode5.addNeighboor(bNode6);
+
             bNode7.addNeighboor(bNode5);
+            bNode5.addNeighboor(bNode7);
 
             System.out.println("1 -> 2, 3, 4 ");
             System.out.println("2 -> 1");
