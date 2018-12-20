@@ -28,7 +28,7 @@ public class CreateBankNode {
             System.out.println("----- BankNode" + newBankId + " is available on RMI registry-----");
             // Connect the node to the network, if it's not the first node
 
-            if (newBankId > 1) {
+/*            if (newBankId > 1) {
                 Random random = new Random();
                 int nbNeighboors = random.nextInt((int) newBankId - 1) + 1;
                 ArrayList<Integer> list = new ArrayList<Integer>();
@@ -45,7 +45,7 @@ public class CreateBankNode {
                     voisin.addNeighboor(bankNode);
 
                 }
-            }
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();
